@@ -25,6 +25,69 @@ k = 3
 print(max_subarray_sum(arr, k))  # Output: 16
 
 
+#Problem 2
+def length_of_longest_substring(s): 
+    char_map = {} # stores most recent index where each character occured
+    left = 0
+    max_length = 0
+
+    for right in range(len(s)):
+        if s[right] in char_map and char_map[s[right]] >= left:
+            left = char_map[s[right]] + 1
+        char_map[s[right]] = right
+        max_length = max(max_length, right - left + 1)
+
+    return max_length
+
+# Example usage
+s = "abcabcbb"
+print(length_of_longest_substring(s))  # Output: 3
+
+#Problem 3
+def max_consecutive_ones(nums):
+    max_length = 0
+    left = 0
+    zero_count = 0
+
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            zero_count += 1
+
+        while zero_count > 1:
+            if nums[left] == 0:
+                zero_count -= 1
+            left += 1
+
+        max_length = max(max_length, right - left + 1)
+
+    return max_length
+
+# Example usage
+nums = [1, 0, 1, 1, 0]
+print(max_consecutive_ones(nums))  # Output: 4
+
+
+#Binary search
+
+#Problem 1
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+# Example usage
+arr = [1, 3, 5, 7, 9, 11, 13]
+target = 7
+print(binary_search(arr, target))  # Output: 3
+
+
 """
 Problem 2:
 
