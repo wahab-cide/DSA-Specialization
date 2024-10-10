@@ -130,4 +130,56 @@ def IsBalanced(str):
                 continue
     
     return stack == []  #if balanced, stack is empty, True
+
+
+
+#Stack Using Doubly Linked List
+
+
+"""
+Key Operations
+Stack:
+
+push: Adds an element to the top.
+pop: Removes and returns the top element.
+peek: Returns the top element without removing it.
+is_empty: Checks if the stack is empty.
+__len__: Returns the size of the stack.
+"""
+class Stack:
+    def __init__(self):
+        self.head = None
+        self.size = 0
+
+    def push(self, data):
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+        else:
+            new_node.next = self.head
+            self.head.prev = new_node
+            self.head = new_node
+        self.size += 1
+
+    def pop(self):
+        if self.head is None:
+            raise IndexError("Pop from an empty stack")
+        data = self.head.data
+        self.head = self.head.next
+        if self.head is not None:
+            self.head.prev = None
+        self.size -= 1
+        return data
+
+    def peek(self):
+        if self.head is None:
+            raise IndexError("Peek from an empty stack")
+        return self.head.data
+
+    def is_empty(self):
+        return self.size == 0
+
+    def __len__(self):
+        return self.size
+
     
