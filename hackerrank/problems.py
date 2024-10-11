@@ -164,3 +164,32 @@ def findZigZagSequence(a, n):
 a = [1, 2, 3, 4, 5, 6, 7]
 n = len(a)
 findZigZagSequence(a, n)
+
+
+
+"""
+Julius Caesar protected his confidential information by encrypting it using a cipher. 
+Caesar's cipher shifts each letter by a number of letters. If the shift takes you past 
+the end of the alphabet, just rotate back to the front of the alphabet. In the case of 
+a rotation by 3, w, x, y and z would map to z, a, b and c.
+"""
+
+
+def caesar_cipher(s, k):
+    
+
+    result = []
+    k = k % 26
+
+
+    for char in s:
+        if char.isalpha():
+            start = ord('A') if char.isupper() else ord('a')
+            shifted_char = chr(start + (ord(char) - start + k) % 26)
+
+            result.append(shifted_char)
+
+        else:
+            result.append(char)
+
+    return ''.join(result)
