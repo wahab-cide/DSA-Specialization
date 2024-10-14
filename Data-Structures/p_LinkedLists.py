@@ -47,25 +47,21 @@ class LinkedList:
         second_last_node= None
         return  second_last_node.data
     
+    def find(self, value):
+            
+            current = self.head
 
-    def find(self, key):    #O(N) NOT CORRECT
-        if self.head is None:
+            while current:
+                if current.value == value:
+                    return current
+                current = current.next
+
             return None
-        
-        if self.head.data == key:
-            return self.head.data
-        
-        while self.head != key:
-            self.head = self.head.next
-        return self.head.next.data
+    
 
 
-    def find_2(self, key): #O(N)
-        while self.head:
-            if self.head == key:
-                return self.head.data
-            self.head = self.head.next
-        return None
+
+
     
     def delete(self, key):  #O(N)
         while self.head:
