@@ -166,3 +166,67 @@ class LinkedList:
                 return True
             
         return False
+    
+
+    def remove_cycle(self):
+        slow, fast = self.head, self.head
+        cycle_exists = False
+
+
+        while fast and fast.next:
+
+            slow = slow.next
+            fast = fast.next.next
+
+            if slow == fast:
+                cycle_exists = True
+                break
+
+        if not cycle_exists:
+            return
+        
+        slow = self.head
+        prev = None
+        while slow != fast:
+            slow = slow.next
+            prev = fast
+            fast = fast.next
+
+        prev.next = None
+
+    def find_middle(self):
+        slow, fast = self.head, self.head
+
+        while slow and fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        return slow.data
+    
+    def length_L(self):
+        count = 0
+        current = self.head
+
+        while current:
+            count += 1
+            current = current.next
+            
+
+        return count
+    
+    def remove_duplicates(self):
+
+        current = self.head
+
+        while current:
+            runner = current
+            while runner.next:
+                if runner.next.data == current.data:
+                    runner.next == runner.next.next
+                else:
+                    runner = runner.next
+
+            current = current.next
+
+
+
