@@ -1,232 +1,104 @@
-class Node:
-    def __init__(self, data):
-
-        self.data = data
-        self.next = None
-
-
-class LinkedList:
+class minHeap:
     def __init__(self):
-        self.head = None
+        self.heap = []
 
 
+    def insert(self, element):
+        self.heap.append(element)
+        self.heap._heapify_up(len(self.heap) - 1)
 
-    def pushFront(self, key):
-
-        new_node = Node(key)
-        new_node.next = self.head
-        self.head = new_node
-
-    def pushBack(self, key):
-        new_node = Node(key)
-        if self.head is None:
-            self.head = new_node
-
-        last_node = self.head
-        while last_node.next:
-            last_node = last_node.next
-        last_node.next = new_node
-
-    def popFront(self):
-        if self.head is None:
-            return None
-        pop_node = self.head
-        self.head = self.head.next
-        return pop_node.data
-    
-    def popBack(self):
-        if self.head is None:
-            return None
-        if self.head.next is None:
-            pop_node = self.head
-            self.head = None
-            return pop_node.data
+    def extractMax(self):
+        if not self.heap:
+            raise IndexError('Heap is empty')
+        if len(self.heap) == 1:
+            return self.heap.pop()
         
-        last_two_node = self.head
-        while last_two_node.next.next:
-            last_two_node = last_two_node.next
-        pop_node = last_two_node.next
-        last_two_node.next = None
-        return last_two_node.next.data
+        root = self.heap[0]
+
+        self.heap[0] = self.heap.pop()
+        self._heapify_up(0)
+        return root
     
 
-    def find(self, key):
-        current = self.head
 
-        while current:
-            if current.data == key:
-                return current
-            current = current.next
+    def _heapify_up(self, index):
+        parent_index = (index - 1) // 2
 
-        return None
-    
-    def delete(self, key):
+        if index > 0 and self.heap[index] < self.heap[parent_index]:
+            self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]
+            self._heapify_up[index]
 
-        while self.head:
-            if self.head.data == key:
-                self.head = self.head.next
-                self.head = None
-            self.head = self.head.next
+    def _heapify_down(self, index):
+        smallest = index
+        left_child_index = 2 + index + 1
+        right_child_index = 2 * index + 2
 
-        return None
-    
-    def reverse(self):
-        prev = None
-        current = self.head
 
-        while current:
-            next_node = current.next
-            current.next = prev
-            prev = current 
-            current = next_node
+        if left_child_index < len(self.heap) and self.heap[left_child_index] < self.heap[index]:
+            smallest = left_child_index
 
-        self.head =  prev
+        if right_child_index < len(self.heap) and self.heap[right_child_index] < self.heap[index]:
+            smalest = right_child_index
 
-    def reverse_l(self):
+        if smallest != index:
+            self.heap[smallest], self.heap[index] = self.heap[index], self.heap[smallest]
+            self._heapify_down(smallest)
 
-        prev = None
-        current = self.head
-
-        while current:
-            next_node = current.next
-            current.next = prev
-            prev = current
-            current = next_node
-
-        self.head = prev 
 
 
     
-    def merge_sorted_iterative(list1, list2):
-        # Create a dummy node to act as the start of the merged list
-        dummy = Node(0)
-        # Use 'tail' to keep track of the end of the merged list
-        tail = dummy
 
-        # Traverse through both lists until one of them is exhausted
-        while list1 and list2:
-            if list1.data < list2.data:
-                tail.next = list1
-                list1 = list1.next
-            else:
-                tail.next = list2
-                list2 = list2.next
-            tail = tail.next
-
-        # Attach the remaining part of the non-exhausted list
-        tail.next = list1 if list1 else list2
-
-        # Return the merged list, skipping over the dummy node
-        return dummy.next
+    def heapify(self, arr, n, i):
+        largest = i
+        left_index = 2 * 1 + 1
+        right_index = 2 * 1 + 2
 
 
 
+        if left_index < n and arr[left_index] > arr[largest]:
+            largest = left_index
+
+        if right_index < n and arr[right_index] > arr[largest]:
+            largest = right_index
+
+        if largest != i:
+            arr[largest], arr[i] = arr[i], arr[largest]
+            self.heapify(arr, n, largest)
+
+
+    def heapsort(self, arr):
+        n = len(arr)
+        for i in range(n // 2 - 1, -1, -1):
+            self.heapify(arr, n, i)
+
+        for i in range(n - 1, 0, -1):
+            arr[i], arr[0] = arr[0], arr[i]
+            self.heapify(arr, i, 0)
+
+
+# find Kth largest element
+
+import heapq
+
+def find_kth_largest(nums, k):
+    min_heap = nums[:k]
+
+    heapq.heapify(min_heap)
+
+
+    for num in nums[k:]:
+        if num > min_heap[0]:
+            heapq.heappop(min_heap)
+            heapq.heappush(min_heap, num)
+
+    return min_heap[0]
 
 
 
+def merge_k_sorted_lists(lists):
+    min_heap = []
 
-
-
-
-
-
-
-
-
-    def merge_sorted(list1, list2):
-        dummy = Node()
-        tail = dummy
-
-        while list1 and list2:
-            if list1.value < list2.value:
-                tail.next = list1
-                list1 = list1.next
-            else:
-                tail.next = list2
-                list2 = list2.next
-
-            tail = tail.next
-
-        tail.next = list1 if list1 else list2
-
-        return dummy.next
-    
-    def find_cycle(self):
-
-        if self.head is None or self.head.next is None:
-            return False
+    for i, l in enumerate(lists):
+        if l:
+            heapq.heappush(min_heap, (l[0], i, 0))
         
-        slow = fast = self.head
-
-        while slow and fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-
-            if slow == fast:
-                return True
-            
-        return False
-    
-
-    def remove_cycle(self):
-        slow, fast = self.head, self.head
-        cycle_exists = False
-
-
-        while fast and fast.next:
-
-            slow = slow.next
-            fast = fast.next.next
-
-            if slow == fast:
-                cycle_exists = True
-                break
-
-        if not cycle_exists:
-            return
-        
-        slow = self.head
-        prev = None
-        while slow != fast:
-            slow = slow.next
-            prev = fast
-            fast = fast.next
-
-        prev.next = None
-
-    def find_middle(self):
-        slow, fast = self.head, self.head
-
-        while slow and fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-
-        return slow.data
-    
-    def length_L(self):
-        count = 0
-        current = self.head
-
-        while current:
-            count += 1
-            current = current.next
-            
-
-        return count
-    
-    def remove_duplicates(self):
-
-        current = self.head
-
-        while current:
-            runner = current
-            while runner.next:
-                if runner.next.data == current.data:
-                    runner.next == runner.next.next
-                else:
-                    runner = runner.next
-
-            current = current.next
-
-
-
