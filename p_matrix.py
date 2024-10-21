@@ -46,6 +46,13 @@ def isValidSudoku(board):
 
 """
 Given an m x n matrix, return all elements of the matrix in spiral order.
+Input: matrix = 
+[
+[1,2,3],
+[4,5,6],
+[7,8,9]
+]
+Output: [1,2,3,6,9,8,7,4,5]
 
 """
 
@@ -202,3 +209,53 @@ def gameOfLife(board):
             elif board[i][j] == -1:
                 board[i][j] = 1  # Dead cell that became live
 
+
+
+def game_of_life(board):
+    m, n = len(board), len(board[0])
+
+    # Iterate through each cell in the board
+    for i in range(m):
+        for j in range(n):
+            neighbors = 0
+
+            # Count the number of live neighbors for the current cell
+            # We use a double loop to check the 8 neighboring cells
+            # (the 3x3 grid centered on the current cell)
+            for dx in [-1, 0, 1]:
+                for dy in [-1, 0, 1]:
+                    # Skip the current cell itself (dx, dy) == (0, 0)
+                    if dx == dy == 0:
+                        continue
+                    
+                    # Calculate the coordinates of the neighboring cell
+                    x, y = i + dx, j + dy
+                    
+                    # Check if the neighboring cell is within the board bounds
+                    # and if it's currently in a "live" state (1 or 2)
+                    if 0 <= x < m and 0 <= y < n and board[x][y] in [1, 2]:
+                        neighbors += 1
+
+            # Apply the rules of the Game of Life
+            if board[i][j] == 1:  # Live cell
+                # Rule 1: Any live cell with fewer than two live neighbors dies,
+                # as if caused by under-population.
+                # Rule 3: Any live cell with more than three live neighbors dies,
+                # as if by over-population.
+                if neighbors < 2 or neighbors > 3:
+                    board[i][j] = 2  # Cell will die in the next generation
+            else:  # Dead cell
+                # Rule 4: Any dead cell with exactly three live neighbors
+                # becomes a live cell, as if by reproduction.
+                if neighbors == 3:
+                    board[i][j] = 3  # Cell will become alive in the next generation
+
+    # Update the board in-place
+    for i in range(m):
+        for j in range(n):
+            if board[i][j] == 2:
+                board[i][j] = 0  # Dead
+            elif board[i][j] == 3:
+                board[i][j] = 1  # Alive
+
+    return board
