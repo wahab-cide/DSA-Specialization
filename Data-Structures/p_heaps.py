@@ -188,10 +188,6 @@ print("Median is:", median_finder.find_median())  # Output: 2.0
 
 
 
-n
-
-
-
 
 
 
