@@ -1,3 +1,6 @@
+# 22 categories
+
+
 #remove duplicates  I 26
 def removeDuplicates(nums):
     # Edge case: If the array is empty, return 0
