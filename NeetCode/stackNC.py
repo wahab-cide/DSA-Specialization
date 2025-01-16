@@ -90,12 +90,12 @@ def generateParenthese(n):
             return
         
         if openN < n:
-            stack.append('()')
+            stack.append('(')
             backtrack(openN + 1, closedN)
             stack.pop()
 
         if closedN < openN:
-            stack.append('(')
+            stack.append(')')
             backtrack(openN, closedN + 1)
             stack.pop()
 
