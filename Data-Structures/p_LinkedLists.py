@@ -62,7 +62,7 @@ class LinkedList:
 
 
 
-    
+ 
     def delete(self, key):  #O(N)
         while self.head:
             if self.head.data == key:
@@ -93,7 +93,7 @@ def reverse(self):
 
 #Merge two sorted linked lists
 """
-merge 2 sorted linsked list
+merge 2 sorted linked list
 Base case: if one list is empty, 
 return the other lsit.
 
@@ -110,6 +110,7 @@ of merging the rest of the lists.
 Continue until one list is exhausted.
 
 """
+
 def merge_sorted(list1, list2):
 
     if not list1:
@@ -299,5 +300,4 @@ class Solution(object):
             if l2:
                 l2 = l2.next
 
-        return dummy.next
-        
+        return dummy.next    
