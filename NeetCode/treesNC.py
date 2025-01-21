@@ -195,4 +195,9 @@ def countGoodNodes(root):
 
 # 11 Valid Binary Search Tree
 def isValidBST(root):
+    pass
+
+
+
+def kthSmallest(root, k)
     
