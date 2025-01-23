@@ -1,7 +1,13 @@
-include <iostream>
+#include <iostream>
 using namespace std;
 
-int main() {
+void pause() ; //prototype
+
+int main() 
+{
     cout << "Enjoy your time with C++" << endl;
+    return 0;
 }
-return 0
+
+
+
