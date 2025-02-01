@@ -43,18 +43,18 @@ def isAnagram(s, t):
 
 #4 group anagrams
 
-def groupAnagrams(strs):
-    res = defaultdict(list)
+def groupAnagrams(strs: list[str]) -> list[list[str]]:
 
+    from collections import defaultdict
+    anagram_groups = defaultdict(list)
+    
+  
     for s in strs:
-        count = [0] * 26
 
-        for c in s:
-            count[ord(c) - ord('a')] += 1
-
-        res[tuple(count)]. append(s)
-
-    return res.values()
+        sorted_str = ''.join(sorted(s))
+        anagram_groups[sorted_str].append(s)
+    
+    return list(anagram_groups.values())
 
 # 5 top k frequent num
 def topKFrequent(nums, k):
@@ -169,3 +169,51 @@ def longestConsecutive(nums):
             longest = max(longest, length)
 
     return longest
+
+
+
+
+def mostUsedIp(connections):
+    user_to_count = dict()
+
+    for _, user in connections:
+        if user not in user_to_count:
+            user_to_count[user] = 0
+        user_to_count[user] += 1
+
+    most_shared_user = None
+    for user, count in user_to_count.items():
+        if not most_shared_user or count > user_to_count[most_shared_user]:
+            most_shared_user = user
+    return most_shared_user
+
+
+def multiAccountCheating(users):
+    uniqueLists = set()
+
+    for _, ips in users:
+        immutableList = tuple(sorted(ips))
+        if immutableList in uniqueLists:
+            return True
+        uniqueLists.add(immutableList)
+    return False
+
+
+
+
+
+def longestSubstring(s):
+    charPosition = dict()
+    maxL = 0
+    start = 0
+
+
+    for pos, char in enumerate(s):
+        if char in charPosition and charPosition[char] >= start:
+            start = charPosition[char] + 1
+        else:
+            maxL = max(maxL, pos - start + 1)
+
+        charPosition[char] = pos
+
+    return maxL

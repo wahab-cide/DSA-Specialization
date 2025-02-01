@@ -170,5 +170,129 @@ class Solution:
 
 
 #6 Pacific Atlantic Water Flow
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        rows, cols = len(heights), len(heights[0])
+        pac, atl = set(), set()
 
+        def dfs(r, c, visited, prevHeight):
+            if ((r, c) in visited or r < 0 or c < 0 or r == rows or c == cols or heights[r][c] < prevHeight):
+                return
+            visited.add((r, c))
+            dxs = [[1, 0], [-1, 0],[0, 1], [0, -1]]
+            for dr, dc in dxs:
+                row, col = r + dr, c + dc
+                dfs(row, col, visited, heights[r][c])
+
+
+        for r in range(rows):
+            dfs(r, 0,pac, heights[r][0] )
+            dfs(r, cols - 1, atl, heights[r][cols - 1])
+
+        for c in range(cols):
+            dfs(0, c, pac, heights[0][c])
+            dfs(rows - 1, c, atl, heights[rows - 1][c])
+
+        res = []
+        for r in range(rows):
+            for c in range(cols):
+                if (r, c) in pac and (r, c) in atl:
+                    res.append([r, c])
+        return res
+
+
+
+#7  Surrounded regions
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        rows, cols = len(board), len(board[0])
+
+        def capture(r, c):
+            if (r < 0 or c < 0 or r == rows or c == cols or board[r][c] != 'O'):
+                return
+            board[r][c] = 'S'
+
+            dxs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+            for dr, dc in dxs:
+                row, col = r + dr, c + dc
+                capture(row, col)
+        
+
+        for r in range(rows):
+            for c in range(cols):
+                if (board[r][c] == 'O' and r in [0, rows - 1] or c in [0, cols - 1]):
+                    capture(r, c)
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == 'O':
+                    board[r][c] = 'X'
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == 'S':
+                    board[r][c] = 'O'
+
+
+        
+
+        
+#8 Course Schedule
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        preMap = {i:[] for i in range(numCourses)}
+        visited = set()
+
+        for crs, pre in prerequisites:
+            preMap[crs].append(pre)
+
+        def dfs(crs):
+            if crs in visited: 
+                return False
+            if preMap[crs] == []:
+                return True
+            visited.add(crs)
+            for pre in preMap[crs]:
+                if not dfs(pre): return False
+            visited.remove(crs)
+            preMap[crs] = []
+            return True
+
+        for crs in range(numCourses):
+            if not dfs(crs): return False
+        return True
+
+
+#9 Course Schedule II
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        preMap = {i:[] for i in range(numCourses)}
+
+        for crs, pre in prerequisites:
+            preMap[crs].append(pre)
+
+
+        res = []
+        visited, cycle = set(), set()
+
+
+        def dfs(crs):
+            if crs in cycle:
+                return False
+            if crs in visited:
+                return True
+            cycle.add(crs)
+            for pre in preMap[crs]:
+                if dfs(pre) == False:
+                    return False        
+            cycle.remove(crs)
+            visited.add(crs)
+            res.append(crs)
+
+        for c in range(numCourses):
+            if dfs(c) == False:
+                return []
+        return res
+
+        
         
