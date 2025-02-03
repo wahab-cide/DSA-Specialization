@@ -293,6 +293,51 @@ class Solution:
             if dfs(c) == False:
                 return []
         return res
+    
+#10 Graph valid Tree
+
+class Solution:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        if not n:
+            return False
+        
+        adj = { i:[] for i in range(n) }
+
+        for n1, n2 in edges:
+            adj[n1].append(n2)
+            adj[n2].append(n1)
+
+        visit = set()
+        def dfs(n, prev):
+            if n in visit:
+                return False
+            visit.add(n)
+
+            for nei in adj[n]:
+                if nei == prev:
+                    continue
+                if not dfs(nei, n):
+                    return False
+            return True
+        
+        return dfs(0, -1) and n == len(visit)
+    
+
+#11 num connected components Union Find
+class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -> int:
+        pass
+
+
+#12 redundant connection
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        pass
+
+#13 Word ladder
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        pass
 
         
         
