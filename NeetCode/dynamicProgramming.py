@@ -138,6 +138,8 @@ def maxProduct(self, nums):
 
 #8 Word Break
 
+from typing import List
+
 def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         n = len(s)
         wordSet = set(wordDict)
