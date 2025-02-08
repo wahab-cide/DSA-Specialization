@@ -78,4 +78,47 @@ def queryResults(limit, queries):
 
         res.append(len(color_count))
     return res
+
+
+"""
+Design a number container system that can do the following:
+
+Insert or Replace a number at the given index in the system.
+Return the smallest index for the given number in the system.
+Implement the NumberContainers class:
+
+NumberContainers() Initializes the number container system.
+void change(int index, int number) Fills the container at index with the number. 
+If there is already a number at that index, replace it.
+int find(int number) Returns the smallest index for the given number, 
+or -1 if there is no index that is filled by number in the system.
+
+"""
             
+import bisect
+from collections import defaultdict
+
+class NumberContainers:
+    def __init__(self):
+        self.index_to_num = {} 
+        self.num_to_indices = defaultdict(list)  
+
+    def change(self, index: int, number: int) -> None:
+        
+        if index in self.index_to_num:
+            old_num = self.index_to_num[index]
+            
+            idx = bisect.bisect_left(self.num_to_indices[old_num], index)
+            if idx < len(self.num_to_indices[old_num]) and self.num_to_indices[old_num][idx] == index:
+                self.num_to_indices[old_num].pop(idx)
+        
+       
+        self.index_to_num[index] = number
+       
+        bisect.insort(self.num_to_indices[number], index)
+
+    def find(self, number: int) -> int:
+        
+        if number in self.num_to_indices and self.num_to_indices[number]:
+            return self.num_to_indices[number][0]
+        return -1
