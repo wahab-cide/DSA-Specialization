@@ -393,9 +393,39 @@ class Solution:
                 return [n1, n2]
 
 #13 Word ladder
-class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        pass
+from collections import deque
+
+def ladderLength(beginWord, endWord, wordList):
+    # Convert wordList to a set for O(1) lookups
+    wordSet = set(wordList)
+    if endWord not in wordSet:
+        return 0  # endWord is not in wordList
+
+    queue = deque([(beginWord, 1)])  # (current_word, steps)
+    wordSet.discard(beginWord)  # Remove beginWord to avoid revisiting
+
+    while queue:
+        current_word, steps = queue.popleft()
+
+        # Check if we've reached the endWord
+        if current_word == endWord:
+            return steps
+
+        # Generate all possible transformations
+        for i in range(len(current_word)):
+            for char in 'abcdefghijklmnopqrstuvwxyz':
+                if char == current_word[i]:
+                    continue  # Skip the same character
+
+                # Create a new word by changing one character
+                new_word = current_word[:i] + char + current_word[i+1:]
+
+                # Check if the new word is in the wordSet
+                if new_word in wordSet:
+                    queue.append((new_word, steps + 1))
+                    wordSet.discard(new_word)  # Avoid revisiting
+
+    return 0  # No transformation sequence found
 
         
         
