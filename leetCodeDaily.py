@@ -122,3 +122,26 @@ class NumberContainers:
         if number in self.num_to_indices and self.num_to_indices[number]:
             return self.num_to_indices[number][0]
         return -1
+    
+"""
+You are given a 0-indexed integer array nums. 
+A pair of indices (i, j) is a bad pair if i < j and j - i != nums[j] - nums[i].
+
+Return the total number of bad pairs in nums.
+"""
+from collections import Counter
+
+def countBadPairs(self, nums):
+    n = len(nums)
+    if n < 2:
+        return 0
+    diff = [nums[i] - i for i in range(n)]
+
+    freq = Counter(diff)
+
+    good_pairs = sum(f * (f - 1) // 2 for f in freq.values())
+
+    total_pairs = n * (n - 1) // 2
+    bad_pairs = total_pairs - good_pairs
+
+    return bad_pairs
