@@ -145,3 +145,26 @@ def countBadPairs(self, nums):
     bad_pairs = total_pairs - good_pairs
 
     return bad_pairs
+
+
+"""
+Given two strings s and part, perform the following operation on 
+s until all occurrences of the substring part are removed:
+
+Find the leftmost occurrence of the substring part and remove it from s.
+Return s after removing all occurrences of part.
+
+A substring is a contiguous sequence of characters in a string.
+
+"""
+
+def removeOccurrences(self, s, part):
+    m = len(part)
+    stack = []
+
+    for char in s:
+        stack.append(char)
+        if len(stack) >= m and ''.join(stack[-m:]) == part:
+            for _ in range(m):
+                stack.pop()
+    return ''.join(stack)
