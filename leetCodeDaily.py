@@ -168,3 +168,31 @@ def removeOccurrences(self, s, part):
             for _ in range(m):
                 stack.pop()
     return ''.join(stack)
+
+
+"""
+You are given a 0-indexed array nums consisting of positive integers. 
+You can choose two indices i and j, such that i != j, and 
+the sum of digits of the number nums[i] is equal to that of nums[j].
+
+Return the maximum value of nums[i] + nums[j] that you can obtain 
+over all possible indices i and j that satisfy the conditions.
+"""
+
+def maximumSum(nums):
+    def digitsSum(n):
+        return sum(int(digit) for digit in str(n))
+    
+    map = defaultdict(list)
+
+    for num in nums:
+        s = digitsSum(num)
+        map[s].append(num)
+    maxSum = -1
+    for s in map:
+        if len(map[s]) >= 2:
+            sortedNums = sorted(map[s], reverse=True)
+            currSum = sortedNums[0] + sortedNums[1]
+            maxSum = max(maxSum, currSum)
+
+    return maxSum
