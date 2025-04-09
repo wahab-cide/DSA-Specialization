@@ -41,3 +41,14 @@ class DynamicArray:
         self.size -= 1
         if self.size /self.capacity < 0.25 and self.capacity > 10:
             self.resize(self.capacity // 2)
+
+    def pop_i(self, i):
+        if i < 0 or i >= self.size:
+            raise IndexError("Index out of bounds")
+        storedElement = self.array[i]
+        for idx in range(i, self.size - 1):
+            self.array[idx] = self.array[idx + 1]
+        self.pop_back()
+        return storedElement
+    #use double ended queue(deque) if you find yourself 
+    # constantly popping from both ends of an array(pg 384)
