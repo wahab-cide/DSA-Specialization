@@ -28,4 +28,47 @@ def to_uppercase(c):
     return chr(ord(c) - ord('a') + ord('A'))
 #if c is a lowercase letter, we can convert it to uppercase by subtracting the ASCII value of 'a'
 #to obtain a number between 0 and 25 representing the position of c in the alphabet. Then, if
-#we add the ASCII code of 'A', we get the ASCII value of the corresponding uppercase letter
+#we add the ASCII code of 'A', we get the ASCII value of the corresponding uppercase letter.
+
+
+def split(s, c):
+    res= []
+    current =[]
+
+    for char in s:
+        if char == c:
+            if current:
+                current.append(char)
+                res.apend(''.join(current))
+                current = []
+        else:
+            current.append(char)
+
+    if current:
+        res.append(''.join(current))
+    return res
+
+print(split("hello world", " "))
+print(split("hello world", "o"))
+print(split("hello world", "l"))
+
+
+def split(s, c):
+    result = []
+    current_part = []
+    
+    for char in s:
+        if char == c:
+            # When we encounter the delimiter, add current part to result
+            if current_part:  # Only add if current_part is not empty
+                result.append(''.join(current_part))
+                current_part = []
+        else:
+            current_part.append(char)
+    
+    # Add the last part after the loop ends
+    if current_part:
+        result.append(''.join(current_part))
+    
+    return result
+
