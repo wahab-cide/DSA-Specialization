@@ -30,6 +30,33 @@ def isPalindrome2(s):
         
     return True
 
+def isPal(s):
+    l,r = 0,len(s) - 1
+
+    while l < r:
+        if s[l] != s[r]:
+            return False
+        l += 1
+        r -= 1
+    return True
+
+
+
+#Smaller prefixes: write a function that takes an array of integers and return true 
+# if the sum of the first k elemnts is smaller than the 
+#sum of the first 2k elements. Else return false.
+def smaller_prefixees(arr):
+    sp, fp = 0, 0
+    ss, fs = 0, 0
+
+    while fp < len(arr):
+        ss += arr[sp]
+        fp += arr[fp] + arr[fp + 1]
+        if ss >= fs:
+            return False
+        sp += 1
+        fs += 2
+    return True
 
 
 
