@@ -52,3 +52,17 @@ class DynamicArray:
         return storedElement
     #use double ended queue(deque) if you find yourself 
     # constantly popping from both ends of an array(pg 384)
+
+
+    def append(self, x):
+        if self._size == self.capacity:
+            self.resize(self.capacity * 2)
+        self.DMarray[self._size]  = x
+        self._size += 1
+
+    def resize(self, new_cap):
+        new_ARR = [None] * new_cap
+        for i in range(self._size):
+            new_ARR[i] = self.DMarray[i]
+        self.DMarray = new_ARR
+        self.capacity = new_cap
