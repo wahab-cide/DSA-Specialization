@@ -44,7 +44,7 @@ Return the maximum amount of water a container can store.
 Notice that you may not slant the container.
 '''
 
-from typing import List 
+from typing import List, Optional 
 class Solution:
     def containerWithMostWater(self, height: List[int]) -> int:
         left = 0
@@ -145,6 +145,64 @@ class Solution:
                         left += 1
                         right -= 1
         return res
+    
+
+'''
+Remove Nth Node From End of List
+Given the head of a linked list, remove the nth node from the end of the list and return its head.
+'''
+class ListNode:
+    def __init__(self, val = 0, next = None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        dummy = ListNode(0, head)
+        slow = fast = dummy
+
+        for _ in range(n):
+            fast = fast.next
+
+        while fast.next:
+            slow = slow.next
+            fast = fast.next
+
+        slow.next = slow.next.next
+        return dummy.next
 
 
+
+'''
+Delete the Middle Node of a Linked List
+
+You are given the head of a linked list. Delete the middle node, and return the head of the modified linked list.
+
+The middle node of a linked list of size n is the ⌊n / 2⌋th node from the start using 0-based indexing, where ⌊x⌋ denotes the largest integer less than or equal to x.
+
+For n = 1, 2, 3, 4, and 5, the middle nodes are 0, 1, 1, 2, and 2, respectively.
+
+
+'''
+class ListNode:
+    def __init__(self, val = 0, next = None):
+        self.val = val
+        self.next = next
+
+
+class Solution:
+    def deleteMiddle(head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return None
+        prev = None
+        slow = fast = head
+
+        while fast and fast.next:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
+
+        prev.next = slow.next
+
+        return head
                 
