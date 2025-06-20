@@ -381,3 +381,8 @@ class Solution:
             else:
                 nums[current], nums[right] = nums[right], nums[current]
                 right -= 1
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        processed = [c.lower() for c in s if c.isalnum()]
+        return processed == processed[::-1]
