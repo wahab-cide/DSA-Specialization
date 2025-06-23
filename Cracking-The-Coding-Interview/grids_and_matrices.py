@@ -129,3 +129,68 @@ class Solution:
 
     def is_valid(self, board, r, c):
         return 0 <= r < len(board) and 0 <= c < len(board[0]) and board[r][c] != 1
+    
+
+from typing import List
+
+class Solution:
+    def isValidSudoku(self, board: List[List[int]]) -> bool:
+        return (
+            self.valid_rows(board) and 
+            self.valid_columns(board) and 
+            self.valid_subgrids(board)
+        )
+
+    def valid_rows(self, board):
+        for r in range(len(board)):
+            seen = set()
+            for c in range(len(board[0])):
+                if board[r][c] != 0:
+                    if board[r][c] in seen:
+                        return False
+                    seen.add(board[r][c])
+        return True
+
+    def valid_columns(self, board):
+        transposed = [list(row) for row in zip(*board)]
+        for r in range(len(transposed)):
+            seen = set()
+            for c in range(len(transposed[0])):
+                if transposed[r][c] != 0:
+                    if transposed[r][c] in seen:
+                        return False
+                    seen.add(transposed[r][c])
+        return True
+
+    def valid_subgrids(self, board):
+        for r in range(3):
+            for c in range(3):
+                if not self.valid_subgrid(board, r * 3, c * 3):
+                    return False
+        return True
+
+    def valid_subgrid(self, board, r, c):
+        seen = set()
+        for nr in range(r, r + 3):
+            for nc in range(c, c + 3):
+                if board[nr][nc] != 0:
+                    if board[nr][nc] in seen:
+                        return False
+                    seen.add(board[nr][nc])
+        return True
+
+
+board = [
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9]
+]
+
+sol = Solution()
+print(sol.isValidSudoku(board))  # Output: True
