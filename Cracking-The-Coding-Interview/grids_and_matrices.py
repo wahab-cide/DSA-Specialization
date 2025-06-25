@@ -194,3 +194,159 @@ board = [
 
 sol = Solution()
 print(sol.isValidSudoku(board))  # Output: True
+
+
+"""
+Sudoku Solver
+"""
+from typing import List
+
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        self.backtrack(board)
+
+    def backtrack(self, board) -> bool:
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == '.':  # ✅ Only process empty cells
+                    for num in map(str, range(1, 10)):
+                        if self.is_valid(board, i, j, num):
+                            board[i][j] = num
+                            if self.backtrack(board):
+                                return True
+                            board[i][j] = '.'  # Backtrack
+                    return False  # No valid number found (trigger backtracking)
+        return True  # All cells filled (solution found)
+
+    def is_valid(self, board, r, c, num) -> bool:
+        # Check row
+        for i in range(9):
+            if board[r][i] == num:
+                return False
+        
+        # Check column
+        for i in range(9):
+            if board[i][c] == num:
+                return False
+        
+        # Check 3×3 box
+        sr, sc = 3 * (r // 3), 3 * (c // 3)
+        for i in range(sr, sr + 3):
+            for j in range(sc, sc + 3):
+                if board[i][j] == num:  # ✅ Check all box cells
+                    return False
+        
+        return True  # Number is valid
+
+
+
+"""Rotate Image
+You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
+
+You have to rotate the image in-place, which means you have to modify the input 2D matrix directly. 
+DO NOT allocate another 2D matrix and do the rotation.
+"""
+
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        n = len(matrix)
+
+        for i in range(n):
+            for j in range(i, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        for i in range(n):
+            matrix[i].reverse()
+
+
+
+"""
+Spiral Matrix
+"""
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+
+        m, n = len(matrix), len(matrix[0])
+        top, bottom = 0, m - 1
+        left, right = 0, n - 1
+        res = []
+
+        while top <= bottom and left <= right:
+
+            for i in range(left, right + 1):
+                res.append(matrix[top][i])
+            top += 1
+
+            for i in range(top, bottom + 1):
+                res.append(matrix[i][right])
+            right -= 1
+
+            if top <= bottom:
+                for i in range(right, left - 1, -1):
+                    res.append(matrix[bottom][i])
+                bottom -= 1
+
+            if left <= right:
+                for i in range(bottom, top - 1, -1):
+                    res.append(matrix[i][left])
+                left += 1
+
+        return res
+
+"""
+Unique Paths II
+
+ou are given an m x n integer array grid. There is a robot initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+An obstacle and space are marked as 1 or 0 respectively in grid. A path that the robot takes cannot include any square that is an obstacle.
+
+Return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The testcases are generated so that the answer will be less than or equal to 2 * 109.
+"""
+
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m, n = len(obstacleGrid), len(obstacleGrid[0])
+
+        if obstacleGrid[0][0] == 1 or obstacleGrid[m - 1][n - 1] == 1:
+            return 0
+
+        dp = [[0] * n for _ in range(m)]
+        dp[0][0] = 1
+
+        #for columns
+        for i in range(1, m):
+            if obstacleGrid[i][0] == 0:
+                dp[i][0] = dp[i - 1][0]
+            else:
+                dp[i][0] = 0
+        #for cols
+        for i in range(1, n):
+            if obstacleGrid[0][i] == 0:
+                dp[0][i] = dp[0][i - 1]
+            else:
+                dp[0][i] = 0
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if obstacleGrid[i][j] == 0:
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+                else:
+                    dp[i][j] = 0
+
+        return dp[m - 1][n - 1]
+
+"""Minimum Path Sum
+
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+"""
+
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        pass
