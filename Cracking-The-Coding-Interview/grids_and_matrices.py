@@ -350,3 +350,26 @@ Note: You can only move either down or right at any point in time.
 class Solution:
     def minPathSum(self, grid: List[List[int]]) -> int:
         pass
+
+'''Set Matrix Zeroes
+
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+
+You must do it in place.
+'''
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        pass
+
+
+"""Word Search
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. 
+The same letter cell may not be used more than once.
+
+"""
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        pass
