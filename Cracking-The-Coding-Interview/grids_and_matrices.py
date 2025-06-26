@@ -202,46 +202,64 @@ Sudoku Solver
 from typing import List
 
 class Solution:
-    def solveSudoku(self, board: List[List[str]]) -> None:
-        """
-        Do not return anything, modify board in-place instead.
-        """
-        self.backtrack(board)
-
-    def backtrack(self, board) -> bool:
+    def solveSudoku(self, board: list[list[str]]) -> None:
+        # We'll use sets to track numbers in each row, column, and box
+        rows = [set() for _ in range(9)]
+        cols = [set() for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+        
+        # Initialize our tracking sets with existing numbers
         for i in range(9):
             for j in range(9):
-                if board[i][j] == '.':  # ✅ Only process empty cells
-                    for num in map(str, range(1, 10)):
-                        if self.is_valid(board, i, j, num):
-                            board[i][j] = num
-                            if self.backtrack(board):
-                                return True
-                            board[i][j] = '.'  # Backtrack
-                    return False  # No valid number found (trigger backtracking)
-        return True  # All cells filled (solution found)
-
-    def is_valid(self, board, r, c, num) -> bool:
-        # Check row
-        for i in range(9):
-            if board[r][i] == num:
-                return False
+                if board[i][j] != '.':
+                    num = board[i][j]
+                    rows[i].add(num)
+                    cols[j].add(num)
+                    box_idx = (i // 3) * 3 + j // 3
+                    boxes[box_idx].add(num)
         
-        # Check column
-        for i in range(9):
-            if board[i][c] == num:
-                return False
+        def is_valid(row, col, num):
+            box_idx = (row // 3) * 3 + col // 3
+            return (num not in rows[row] and 
+                    num not in cols[col] and 
+                    num not in boxes[box_idx])
         
-        # Check 3×3 box
-        sr, sc = 3 * (r // 3), 3 * (c // 3)
-        for i in range(sr, sr + 3):
-            for j in range(sc, sc + 3):
-                if board[i][j] == num:  # ✅ Check all box cells
-                    return False
+        def backtrack(row, col):
+            # If we've filled all cells, we're done
+            if row == 9:
+                return True
+                
+            # Calculate next position
+            next_row = row + (col + 1) // 9
+            next_col = (col + 1) % 9
+            
+            # If current cell is filled, move to next cell
+            if board[row][col] != '.':
+                return backtrack(next_row, next_col)
+                
+            # Try each number 1-9
+            for num in map(str, range(1, 10)):
+                if is_valid(row, col, num):
+                    # Place the number and update tracking sets
+                    board[row][col] = num
+                    rows[row].add(num)
+                    cols[col].add(num)
+                    box_idx = (row // 3) * 3 + col // 3
+                    boxes[box_idx].add(num)
+                    
+                    # Recursively try to solve rest of board
+                    if backtrack(next_row, next_col):
+                        return True
+                        
+                    # If we couldn't solve it, backtrack
+                    board[row][col] = '.'
+                    rows[row].remove(num)
+                    cols[col].remove(num)
+                    boxes[box_idx].remove(num)
+                    
+            return False
         
-        return True  # Number is valid
-
-
+        backtrack(0, 0)
 
 """Rotate Image
 You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
@@ -373,3 +391,37 @@ The same letter cell may not be used more than once.
 class Solution:
     def exist(self, board: List[List[str]], word: str) -> bool:
         pass
+
+
+
+"""
+Maximal Rectangle
+"""
+class Solution:
+    def maximalRectangle(self, matrix: List[List[str]]) -> int:
+        if not matrix:
+            return 0
+        
+        rows, cols = len(matrix), len(matrix[0])
+        heights = [0] * (cols + 1)  # Include an extra element for easier calculation
+        max_area = 0
+        
+        for row in matrix:
+            for i in range(cols):
+                heights[i] = heights[i] + 1 if row[i] == '1' else 0
+            
+            # Calculate max area using histogram method
+            n = len(heights)  # Number of bars in the histogram
+
+            for i in range(n):
+                for j in range(i, n):
+                    # Determine the minimum height between bar i and bar j
+                    min_height = min(heights[k] for k in range(i, j + 1))
+                    # Calculate the area of the rectangle
+                    area = min_height * (j - i + 1)
+                    # Update maximum area if the current rectangle's area is larger
+                    if area > max_area:
+                        max_area = area
+
+        return max_area
+        
