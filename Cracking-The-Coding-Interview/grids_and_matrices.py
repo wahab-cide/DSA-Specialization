@@ -367,8 +367,22 @@ Note: You can only move either down or right at any point in time.
 
 class Solution:
     def minPathSum(self, grid: List[List[int]]) -> int:
-        pass
+        m, n = len(grid), len(grid[0])
+        dp = [[0] * n for _ in range(m)]
 
+        dp[0][0] = grid[0][0]
+
+        for j in range(1, n):
+            dp[0][j] = dp[0][j - 1] + grid[0][j]
+
+        for i in range(1, m):
+            dp[i][0] = dp[i - 1][0] = grid[i][0]
+
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+
+        return dp[m - 1][n - 1]
 '''Set Matrix Zeroes
 
 Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
@@ -378,7 +392,49 @@ You must do it in place.
 
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:
-        pass
+        
+        if not matrix:
+            return
+
+        m, n = len(matrix), len(matrix[0])
+
+        Frhz = False
+        Fchz = False
+
+        for j in range(n):
+            if matrix[0][j] == 0:
+                Frhz = True
+                break
+
+        for i in range(m):
+            if matrix[i][0] == 0:
+                Fchz = True
+
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+
+        for j in range(1, n):
+            if matrix[0][j] == 0:
+                for i in range(1, m):
+                    matrix[i][j] = 0
+
+        for i in range(1, m):
+            if matrix[i][0] == 0:
+                for j in range(1, n):
+                    matrix[i][j] = 0 
+
+
+        if Frhz:
+            for i in range(n):
+                matrix[0][i] = 0
+
+        if Fchz:
+            for i in range(m):
+                matrix[i][0] = 0
 
 
 """Word Search
@@ -390,7 +446,35 @@ The same letter cell may not be used more than once.
 """
 class Solution:
     def exist(self, board: List[List[str]], word: str) -> bool:
-        pass
+
+        m, n = len(board), len(board[0])
+        len_word = len(word)
+        if not word:
+            return True
+
+        def dfs(i, j, k):
+            if k == len_word:
+                return True
+            if i < 0 or i >= m or j < word or j >= n or board[i][j] != word[k]:
+                return False
+            temp = board[i][j]
+            board[i][j] = '#'
+            found = (dfs(i + 1, j, k + 1) or 
+                     dfs(i, j + 1, k + 1) or 
+                     dfs(i - 1, j, k + 1) or 
+                     dfs(i, j - 1, k + 1))
+            board[i][j] = temp 
+            return found
+        
+
+
+
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == word[0] and dfs(i, j, 0):
+                    return True
+        return False
+
 
 
 
@@ -399,29 +483,22 @@ Maximal Rectangle
 """
 class Solution:
     def maximalRectangle(self, matrix: List[List[str]]) -> int:
-        if not matrix:
+        if not matrix or not matrix[0]:
             return 0
-        
-        rows, cols = len(matrix), len(matrix[0])
-        heights = [0] * (cols + 1)  # Include an extra element for easier calculation
+        cols = len(matrix[0])
+        heights = [0] * cols
         max_area = 0
-        
+
         for row in matrix:
             for i in range(cols):
-                heights[i] = heights[i] + 1 if row[i] == '1' else 0
-            
-            # Calculate max area using histogram method
-            n = len(heights)  # Number of bars in the histogram
-
-            for i in range(n):
-                for j in range(i, n):
-                    # Determine the minimum height between bar i and bar j
-                    min_height = min(heights[k] for k in range(i, j + 1))
-                    # Calculate the area of the rectangle
-                    area = min_height * (j - i + 1)
-                    # Update maximum area if the current rectangle's area is larger
-                    if area > max_area:
-                        max_area = area
-
+                heights[i] = heights[i] + 1 if row[i] =='1' else 0
+            stack = []
+            for i in range(cols + 1):
+                current_height = heights[i] if i < cols else 0
+                while stack and heights[stack[-1]] > current_height:
+                    h = heights[stack.pop()]
+                    w = i - stack[-1] - 1 if stack else i
+                    max_area = max(max_area. h * w)
+                stack.append(i)
         return max_area
         
