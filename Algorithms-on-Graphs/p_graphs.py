@@ -87,44 +87,6 @@ def solve(board):
                 board[r][c] = 'X'
             elif board[r][c] == 'S':   # Safe 'O'
                 board[r][c] = 'O'
-def solve(self, board):
-        """
-        :type board: List[List[str]]
-        :rtype: None Do not return anything, modify board in-place instead.
-        """
-
-        if not board or not board[0]:
-            return
-
-        m, n = len(board), len(board[0])
-
-
-        def dfs(r, c):
-            if r < 0 or c < 0 or r >= m or c >= n or board[r][c] != 'O':
-                return
-            board[r][c] == 'S'
-
-            dfs(r + 1, c)
-            dfs(r - 1, c)
-            dfs(r, c + 1)
-            dfs(r, c - 1)
-
-        #check 1st and last rows
-        for r in range(n):
-            dfs(0, r)  
-            dfs(m - 1, r)
-
-        #check first and last colums
-        for c in range(m):
-            dfs(c, 0)
-            dfs(c, n - 1)     
-
-        for r in range(m):
-            for c in range(n):
-                if board[r][c] == 'S':
-                    board[r][c] = 'O'
-                elif board[r][c] == 'O':
-                    board[r][c] = 'X'  
 
 """
 Given a reference of a node in a connected undirected graph.
@@ -296,3 +258,145 @@ def findOrder(numCourses, prerequisites):
     
     # Return order if all courses can be taken, empty list otherwise
     return order if len(order) == numCourses else []
+
+
+# graph BFS
+"""
+You are given an n x n integer matrix board where the cells are labeled from 1 to n2 in a Boustrophedon style starting from the bottom left of the board (i.e. board[n - 1][0]) and alternating direction each row.
+
+You start on square 1 of the board. In each move, starting from square curr, do the following:
+
+Choose a destination square next with a label in the range [curr + 1, min(curr + 6, n2)].
+This choice simulates the result of a standard 6-sided die roll: i.e., there are always at most 6 destinations, regardless of the size of the board.
+If next has a snake or ladder, you must move to the destination of that snake or ladder. Otherwise, you move to next.
+The game ends when you reach the square n2.
+A board square on row r and column c has a snake or ladder if board[r][c] != -1. The destination of that snake or ladder is board[r][c]. Squares 1 and n2 are not the starting points of any snake or ladder.
+
+Note that you only take a snake or ladder at most once per dice roll. If the destination to a snake or ladder is the start of another snake or ladder, you do not follow the subsequent snake or ladder.
+
+For example, suppose the board is [[-1,4],[-1,3]], and on the first move, your destination square is 2. You follow the ladder to square 3, but do not follow the subsequent ladder to 4.
+Return the least number of dice rolls required to reach the square n2. If it is not possible to reach the square, return -1
+
+"""
+
+class Solution:
+    def snakesAndLadders(self, board: List[List[int]]) -> int:
+        n = len(board)
+        def get_pos(s):
+            r, c = divmod(s - 1, n)
+            if r % 2 == 1:
+                c = n - c - 1
+            r = n - r - 1
+            return r, c
+
+        queue = deque([(1, 0)])
+        visited = {1}
+
+        while queue:
+            curr, moves = queue.popleft()
+            if curr == n * n:
+                return moves
+
+            for i in range(1, 7):
+                next_square = curr + i
+                if next_square > n * n:
+                    continue
+                row, col = get_pos(next_square)
+                if board[row][col] != -1:
+                    next_square = board[row][col]
+                
+                if next_square not in visited:
+                    visited.add(next_square)
+                    queue.append((next_square, moves + 1))
+
+        return -1
+
+
+"""
+A gene string can be represented by an 8-character long string, with choices from 'A', 'C', 'G', and 'T'.
+
+Suppose we need to investigate a mutation from a gene string startGene to a gene string endGene where one mutation is defined as one single character changed in the gene string.
+
+For example, "AACCGGTT" --> "AACCGGTA" is one mutation.
+There is also a gene bank bank that records all the valid gene mutations. A gene must be in bank to make it a valid gene string.
+
+Given the two gene strings startGene and endGene and the gene bank bank, return the minimum number of mutations needed to mutate from startGene to endGene. If there is no such a mutation, return -1.
+
+Note that the starting point is assumed to be valid, so it might not be included in the bank.
+
+"""
+
+class Solution:
+    def minMutation(self, startGene: str, endGene: str, bank: List[str]) -> int:
+
+        if endGene not in bank:
+            return -1
+
+        bank = set(bank)   
+        chars = ['A', 'C', 'G', 'T']
+        queue = deque([(startGene, 0)])
+        visited = {startGene}
+
+        while queue:
+            currGene, mutations = queue.popleft()
+            if currGene == endGene:
+                return mutations
+            
+            for i in range(8):
+                for char in chars:
+                    if char == currGene[i]:
+                        continue
+
+                    mutation = currGene[:i] + char + currGene[i + 1:]
+                    if mutation in bank and mutation not in visited:
+                        visited.add(mutation)
+                        queue.append((mutation, mutations + 1))
+
+        return -1
+
+
+
+"""
+A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:
+
+Every adjacent pair of words differs by a single letter.
+Every si for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.
+sk == endWord
+Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
+
+"""
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+
+        if endWord not in wordList: return 0
+
+        word_len = len(beginWord)
+        patterns = defaultdict(list)
+
+        for word in wordList:
+            for i in range(word_len):
+                pattern = word[:i] + '*' + word[i + 1:]
+                patterns[pattern].append(word)
+
+
+        queue = deque([(beginWord, 1)])
+        visited = {beginWord}
+
+        while queue:
+            currWord, lengthLadder = queue.popleft()
+
+            if currWord == endWord:
+                return lengthLadder
+
+            for i in range(word_len):
+                pattern = currWord[:i] + '*' + currWord[i + 1:]
+
+                for word in patterns[pattern]:
+                    if word not in visited:
+                        visited.add(word)
+                        queue.append((word, lengthLadder + 1))
+
+
+        return 0
+        
