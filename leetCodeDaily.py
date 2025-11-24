@@ -227,5 +227,68 @@ class Solution:
             heapq.heappush(nums, (min(x, y) * 2 + max(x, y)))
             operations += 1
         return operations
+    
+
+"""
+You are given a 2D integer array intervals where intervals[i] = [starti, endi] represents all the integers from starti to endi inclusively.
+
+A containing set is an array nums where each interval from intervals has at least two integers in nums.
+
+For example, if intervals = [[1,3], [3,7], [8,9]], then [1,2,4,7,8,9] and [2,3,4,8,9] are containing sets.
+Return the minimum possible size of a containing set.
+"""
+import bisect
+from bisect import bisect_left, bisect_right
+class Solution:
+    def intersectionSizeTwo(self, intervals: List[List[int]]) -> int:
+        intervals.sort(key=lambda x: x[1])
+        chosen = []  # sorted list of chosen points
+        
+        for a, b in intervals:
+            # Binary search to find count of chosen in [a,b]
+            left = bisect_left(chosen, a)
+            right = bisect_right(chosen, b) - 1
+            count = right - left + 1 if left <= right else 0
+            
+            # Add largest numbers not already chosen until count == 2
+            need = 2 - count
+            candidate = b
+            while need > 0:
+                pos = bisect_left(chosen, candidate)
+                if pos >= len(chosen) or chosen[pos] != candidate:
+                    # candidate not in chosen, add it
+                    chosen.insert(pos, candidate)
+                    need -= 1
+                candidate -= 1
+        
+        return len(chosen)
+            
+    
+
+
+"""
+Given a string s, return the number of unique palindromes of length three that are a subsequence of s.
+
+Note that even if there are multiple ways to obtain the same subsequence, it is still only counted once.
+
+A palindrome is a string that reads the same forwards and backwards.
+
+A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+For example, "ace" is a subsequence of "abcde".
+
+
+"""
+class Solution:
+    def countPalindromicSubsequence(self, s: str) -> int:
+        count = 0
+
+        for c in set(s):
+            first = s.find(c)
+            last = s.rfind(c)
+            if first != last:
+                unique_chars = set(s[first + 1: last])
+                count += len(unique_chars)
+        return count
 
         
