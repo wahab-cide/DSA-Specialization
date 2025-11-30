@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <algorithm>
 #include <climits>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 
@@ -336,3 +338,127 @@ public:
         
     }
 };
+
+
+/*
+Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return the researcher's h-index.
+
+According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
+
+*/
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        sort(citations.rbegin(), citations.rend());  // Sort descending
+        
+        int h = 0;
+        for (int i = 0; i < citations.size(); i++) {
+            if (citations[i] >= i + 1) {
+                h = i + 1;
+            } else {
+                break;
+            }
+        }
+        
+        return h;
+    }
+};
+
+
+/* 
+Sorting & Counting Approach:
+Sort the citations in descending order
+Find the largest index where citations[i] >= i + 1
+The h-index is the point where this condition breaks
+Alternative: Use counting sort for O(n) time
+*/
+
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        int n = citations.size();
+        vector<int> count(n + 1, 0);
+        
+        // Count papers for each citation count
+        for (int citation : citations) {
+            if (citation >= n) {
+                count[n]++;
+            } else {
+                count[citation]++;
+            }
+        }
+        
+        // Find h-index by accumulating from high to low
+        int total = 0;
+        for (int i = n; i >= 0; i--) {
+            total += count[i];
+            if (total >= i) {
+                return i;
+            }
+        }
+        
+        return 0;
+    }
+};
+
+/* 
+Implement the RandomizedSet class:
+
+RandomizedSet() Initializes the RandomizedSet object.
+bool insert(int val) Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
+bool remove(int val) Removes an item val from the set if present. Returns true if the item was present, false otherwise.
+int getRandom() Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.
+You must implement the functions of the class such that each function works in average O(1) time complexity.
+*/
+using namespace std;
+
+class RandomizedSet {
+private:
+    unordered_map<int, int> valToIndex;  // value -> index in vector
+    vector<int> values;                  // stores the values
+
+public:
+    RandomizedSet() {
+        srand(time(0));  // Seed for random number generation
+    }
+    
+    bool insert(int val) {
+        if (valToIndex.find(val) != valToIndex.end()) {
+            return false;
+        }
+        
+        // Add to end of vector and store index in hash map
+        values.push_back(val);
+        valToIndex[val] = values.size() - 1;
+        return true;
+    }
+    
+    bool remove(int val) {
+        if (valToIndex.find(val) == valToIndex.end()) {
+            return false;
+        }
+        
+        // Get index of value to remove
+        int idx = valToIndex[val];
+        int lastVal = values.back();
+        
+        // Swap with last element
+        values[idx] = lastVal;
+        valToIndex[lastVal] = idx;
+        
+        // Remove last element
+        values.pop_back();
+        valToIndex.erase(val);
+        
+        return true;
+    }
+    
+    int getRandom() {
+        int randomIndex = rand() % values.size();
+        return values[randomIndex];
+    }
+};
+
+
+
+
